@@ -73,7 +73,7 @@ export function Waitlist() {
           </>
         )}
         <p className="mt-6 text-sm text-slate">
-          No credit card. No commitment. migrait.app — A Budruum product.
+          No credit card. No commitment. migrait.app
         </p>
       </div>
     </motion.section>

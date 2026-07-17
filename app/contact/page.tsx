@@ -48,20 +48,6 @@ export default function ContactPage() {
                   hello@migrait.app
                 </a>
               </div>
-              <div>
-                <p className="font-semibold text-night">Built by</p>
-                <p>
-                  Budruum Ltd —{' '}
-                  <a
-                    href="https://budruum.co.uk"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-electric font-semibold"
-                  >
-                    budruum.co.uk
-                  </a>
-                </p>
-              </div>
             </div>
           </aside>
         </div>

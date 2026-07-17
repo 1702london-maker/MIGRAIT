@@ -16,7 +16,6 @@ const cols = [
     links: [
       { label: 'About', href: '/about' },
       { label: 'Contact', href: '/contact' },
-      { label: 'Budruum.co.uk', href: 'https://budruum.co.uk' },
     ],
   },
   {
@@ -36,8 +35,6 @@ export function Footer() {
           <MigraitLogo size="sm" />
           <p className="mt-4 text-sm text-slate leading-relaxed">
             Migration, accelerated.
-            <br />
-            A Budruum product.
           </p>
         </div>
         {cols.map((col) => (
@@ -57,7 +54,7 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              {col.title === 'Legal' && <li className="text-sm text-slate">© 2026 Budruum Ltd</li>}
+              {col.title === 'Legal' && <li className="text-sm text-slate">© 2026 Migrait.</li>}
             </ul>
           </div>
         ))}

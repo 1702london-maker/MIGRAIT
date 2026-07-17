@@ -3,7 +3,7 @@ import { Zap, Eye, MousePointerClick } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'Migrait is a Budruum Ltd product. Built because the tools we used were terrible.',
+  description: 'Migrait was built because the tools we used were terrible.',
 }
 
 const diffs = [
@@ -33,11 +33,11 @@ export default function AboutPage() {
           We built Migrait because the tools we used were terrible.
         </h1>
         <p className="mt-6 mx-auto max-w-[620px] text-lg text-slate leading-relaxed">
-          Migrait is a product of Budruum Ltd — a UK-based founder studio that builds software
-          solving real problems for businesses that cannot afford to waste time. We spent years
-          watching data migration projects overrun, fail, and damage client relationships because
-          the tools available were either too complex, too slow, or completely invisible to the
-          client. So we built the tool we always wanted.
+          Migrait is built by a UK-based team that creates software solving real problems for
+          businesses that cannot afford to waste time. We spent years watching data migration
+          projects overrun, fail, and damage client relationships because the tools available were
+          either too complex, too slow, or completely invisible to the client. So we built the tool
+          we always wanted.
         </p>
       </section>
 
@@ -69,24 +69,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-5 pb-28 text-center">
-        <h2 className="font-bold text-night text-[30px] md:text-[42px] tracking-[-1px]">
-          Built by Budruum Ltd
-        </h2>
-        <p className="mt-5 text-night leading-[1.7]">
-          Budruum Ltd is a UK founder studio building SaaS products across data, care technology,
-          EdTech, and enterprise software. Migrait is one of several products in the Budruum
-          portfolio.{' '}
-          <a
-            href="https://budruum.co.uk"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-electric font-semibold"
-          >
-            budruum.co.uk
-          </a>
-        </p>
-      </section>
     </div>
   )
 }
