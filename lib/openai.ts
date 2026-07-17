@@ -1,5 +1,5 @@
 import OpenAI from 'openai'
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+function getOpenAI() { return new OpenAI({ apiKey: process.env.OPENAI_API_KEY }) }
 
 export async function suggestFieldMappings(sourceFields: string[], destinationFields: string[], sourceEntityName: string, destinationEntityName: string) {
   const prompt = `You are a data migration expert. Given source fields from ${sourceEntityName} and destination fields from ${destinationEntityName}, suggest the best field mappings with confidence scores.
@@ -18,7 +18,7 @@ Rules:
 - Do not include mappings below 50 confidence
 - Consider common Dynamics 365 field naming patterns like emailaddress1 matching to email, fullname matching to name, telephone1 matching to phone`
 
-  const response = await openai.chat.completions.create({
+  const response = await getOpenAI().chat.completions.create({
     model: 'gpt-4o',
     messages: [{ role: 'user', content: prompt }],
     temperature: 0.1,
