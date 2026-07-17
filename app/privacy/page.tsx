@@ -12,7 +12,7 @@ export default function PrivacyPage() {
         <div className="prose prose-slate max-w-none space-y-8">
           <section>
             <h2 className="text-xl font-bold text-[#0A0E1A] mb-3">1. Introduction</h2>
-            <p className="text-[#6B7A8D] leading-relaxed">Budruum Ltd (&ldquo;Migrait&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) operates the Migrait data migration platform at migrait.app. This Privacy Policy explains how we collect, use, and protect your personal data in compliance with the UK GDPR and the Data Protection Act 2018.</p>
+            <p className="text-[#6B7A8D] leading-relaxed">Migrait Ltd (&ldquo;Migrait&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;) operates the Migrait data migration platform at migrait.app. This Privacy Policy explains how we collect, use, and protect your personal data in compliance with the UK GDPR and the Data Protection Act 2018.</p>
           </section>
 
           <section>
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
 
           <section>
             <h2 className="text-xl font-bold text-[#0A0E1A] mb-3">9. Contact Us</h2>
-            <p className="text-[#6B7A8D] leading-relaxed">For any privacy queries, contact our data controller at: <a href="mailto:hello@migrait.app" className="text-[#E11D48] hover:underline">hello@migrait.app</a><br />Budruum Ltd, United Kingdom</p>
+            <p className="text-[#6B7A8D] leading-relaxed">For any privacy queries, contact our data controller at: <a href="mailto:hello@migrait.app" className="text-[#E11D48] hover:underline">hello@migrait.app</a><br />Migrait Ltd, United Kingdom</p>
           </section>
         </div>
       </div>

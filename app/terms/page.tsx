@@ -12,7 +12,7 @@ export default function TermsPage() {
         <div className="space-y-8">
           <section>
             <h2 className="text-xl font-bold text-[#0A0E1A] mb-3">1. Agreement to Terms</h2>
-            <p className="text-[#6B7A8D] leading-relaxed">By accessing or using the Migrait platform at migrait.app, you agree to be bound by these Terms of Service. If you do not agree, you may not use the service. These terms constitute a legally binding agreement between you and Budruum Ltd.</p>
+            <p className="text-[#6B7A8D] leading-relaxed">By accessing or using the Migrait platform at migrait.app, you agree to be bound by these Terms of Service. If you do not agree, you may not use the service. These terms constitute a legally binding agreement between you and Migrait Ltd.</p>
           </section>
 
           <section>
@@ -45,12 +45,12 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-xl font-bold text-[#0A0E1A] mb-3">6. Intellectual Property</h2>
-            <p className="text-[#6B7A8D] leading-relaxed">The Migrait platform, including all software, designs, trademarks, and content, is owned by Budruum Ltd and protected by UK and international intellectual property laws. Nothing in these terms grants you any rights in our intellectual property except as expressly stated.</p>
+            <p className="text-[#6B7A8D] leading-relaxed">The Migrait platform, including all software, designs, trademarks, and content, is owned by Migrait Ltd and protected by UK and international intellectual property laws. Nothing in these terms grants you any rights in our intellectual property except as expressly stated.</p>
           </section>
 
           <section>
             <h2 className="text-xl font-bold text-[#0A0E1A] mb-3">7. Limitation of Liability</h2>
-            <p className="text-[#6B7A8D] leading-relaxed">To the fullest extent permitted by law, Budruum Ltd shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or goodwill, arising from your use of the service. Our total liability shall not exceed the fees paid by you in the 12 months preceding the claim. Nothing in these terms limits liability for death or personal injury caused by negligence, fraud, or any liability that cannot be excluded by law.</p>
+            <p className="text-[#6B7A8D] leading-relaxed">To the fullest extent permitted by law, Migrait Ltd shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or goodwill, arising from your use of the service. Our total liability shall not exceed the fees paid by you in the 12 months preceding the claim. Nothing in these terms limits liability for death or personal injury caused by negligence, fraud, or any liability that cannot be excluded by law.</p>
           </section>
 
           <section>
@@ -70,7 +70,7 @@ export default function TermsPage() {
 
           <section>
             <h2 className="text-xl font-bold text-[#0A0E1A] mb-3">11. Contact</h2>
-            <p className="text-[#6B7A8D] leading-relaxed">Questions about these terms: <a href="mailto:hello@migrait.app" className="text-[#E11D48] hover:underline">hello@migrait.app</a><br />Budruum Ltd, United Kingdom</p>
+            <p className="text-[#6B7A8D] leading-relaxed">Questions about these terms: <a href="mailto:hello@migrait.app" className="text-[#E11D48] hover:underline">hello@migrait.app</a><br />Migrait Ltd, United Kingdom</p>
           </section>
         </div>
       </div>
