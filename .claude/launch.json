@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "migrait",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "C:\\Users\\MARTINS JOHNSON\\Downloads\\migrait-website",
+      "port": 3000
+    }
+  ]
+}
