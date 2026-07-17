@@ -1,49 +1,24 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { Check } from 'lucide-react'
+import { PricingCards } from '@/components/PricingCards'
 
 export const metadata: Metadata = {
-  title: 'Pricing — Migrait',
+  title: 'Pricing',
   description:
-    'Simple, transparent pricing for Migrait. Starter from £299 per project, Pro at £799 per month, and custom Enterprise plans.',
+    'Simple transparent pricing for data migration consultancies. Start from £299 per project.',
 }
 
-const tiers = [
+const pricingFaqs = [
   {
-    name: 'Starter',
-    price: '£299',
-    period: '/ project',
-    features: ['Up to 500k records', '5 source connectors', 'Standard dashboard', 'Email support'],
-    cta: 'Get started',
-    popular: false,
+    q: 'Is there a free trial?',
+    a: 'Yes. Pro plan includes a 14-day free trial, no credit card required.',
   },
   {
-    name: 'Pro',
-    price: '£799',
-    period: '/ month',
-    features: [
-      'Up to 5M records',
-      'All connectors',
-      'Live client dashboard',
-      'Priority support',
-      'AI field mapping',
-    ],
-    cta: 'Start free trial',
-    popular: true,
+    q: 'Can I change plans?',
+    a: 'Yes. Upgrade or downgrade at any time — changes take effect on your next billing date.',
   },
   {
-    name: 'Enterprise',
-    price: 'Custom',
-    period: '',
-    features: [
-      'Unlimited records',
-      'All connectors',
-      'White-label portal',
-      'Dedicated support',
-      'SLA guarantee',
-    ],
-    cta: 'Talk to us',
-    popular: false,
+    q: 'What payment methods do you accept?',
+    a: 'All major credit and debit cards via Stripe. Invoice available on Enterprise.',
   },
 ]
 
@@ -55,42 +30,13 @@ export default function PricingPage() {
         <h1 className="mt-6 font-black text-night text-[40px] md:text-[56px] leading-[1.08] tracking-[-2px]">
           Simple, transparent pricing.
         </h1>
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
-          {tiers.map((t) => (
-            <div
-              key={t.name}
-              className={`relative rounded-lg p-8 bg-white flex flex-col ${
-                t.popular ? 'border-2 border-electric' : 'border border-line'
-              }`}
-            >
-              {t.popular && (
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-electric text-white text-[11px] font-semibold uppercase tracking-[2px] rounded-full px-4 py-1">
-                  Most popular
-                </span>
-              )}
-              <h2 className="font-semibold text-night text-[22px]">{t.name}</h2>
-              <p className="mt-4">
-                <span className="font-black text-night text-4xl">{t.price}</span>
-                <span className="text-slate text-sm ml-1">{t.period}</span>
-              </p>
-              <ul className="mt-6 space-y-3 flex-1">
-                {t.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-night text-[15px]">
-                    <Check size={18} className="text-electric mt-0.5 flex-shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/contact"
-                className={`mt-8 text-center font-bold text-[15px] rounded-full px-6 py-3 transition-transform duration-150 hover:scale-105 ${
-                  t.popular
-                    ? 'bg-electric text-white'
-                    : 'border border-line text-night hover:border-electric'
-                }`}
-              >
-                {t.cta}
-              </Link>
+        <p className="mt-5 text-slate text-lg">Start free. Scale as you grow. No hidden fees.</p>
+        <PricingCards />
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+          {pricingFaqs.map((f) => (
+            <div key={f.q}>
+              <h3 className="font-semibold text-night text-base">{f.q}</h3>
+              <p className="mt-2 text-slate text-[15px] leading-[1.7]">{f.a}</p>
             </div>
           ))}
         </div>

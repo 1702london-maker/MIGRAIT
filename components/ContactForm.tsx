@@ -5,13 +5,16 @@ import { supabase } from '@/lib/supabase'
 
 const inputClass =
   'w-full border border-line rounded-lg py-4 px-5 text-night placeholder:text-slate bg-white'
+const labelClass = 'text-[11px] font-semibold uppercase tracking-[2px] text-slate'
 
 export function ContactForm() {
   const [form, setForm] = useState({
     full_name: '',
     email: '',
     company: '',
-    records_estimate: '<100k',
+    role: '',
+    records_estimate: '',
+    source_system: '',
     message: '',
   })
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
@@ -38,9 +41,10 @@ export function ContactForm() {
 
   if (status === 'success') {
     return (
-      <div className="border border-line rounded-lg p-10 text-center">
-        <p className="text-electric font-bold text-xl">Request received.</p>
-        <p className="mt-2 text-slate">We&apos;ll be in touch within 1 business day.</p>
+      <div className="border border-line rounded-xl p-10 text-center">
+        <p className="text-night font-semibold text-xl">
+          Request received. We will be in touch within 1 business day.
+        </p>
       </div>
     )
   }
@@ -49,45 +53,75 @@ export function ContactForm() {
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <label className="block">
-          <span className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">Full name</span>
-          <input className={`${inputClass} mt-2`} value={form.full_name} onChange={set('full_name')} placeholder="Jane Smith" />
+          <span className={labelClass}>Full name *</span>
+          <input className={`${inputClass} mt-2`} value={form.full_name} onChange={set('full_name')} placeholder="Jane Smith" required />
         </label>
         <label className="block">
-          <span className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">Email address</span>
-          <input type="email" className={`${inputClass} mt-2`} value={form.email} onChange={set('email')} placeholder="jane@consultancy.com" />
+          <span className={labelClass}>Work email *</span>
+          <input type="email" className={`${inputClass} mt-2`} value={form.email} onChange={set('email')} placeholder="jane@consultancy.com" required />
         </label>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <label className="block">
-          <span className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">Company name</span>
-          <input className={`${inputClass} mt-2`} value={form.company} onChange={set('company')} placeholder="Your consultancy" />
+          <span className={labelClass}>Company name *</span>
+          <input className={`${inputClass} mt-2`} value={form.company} onChange={set('company')} placeholder="Your consultancy" required />
         </label>
         <label className="block">
-          <span className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">
-            Estimated records per migration
-          </span>
-          <select className={`${inputClass} mt-2`} value={form.records_estimate} onChange={set('records_estimate')}>
-            <option>&lt;100k</option>
-            <option>100k–1M</option>
-            <option>1M–5M</option>
+          <span className={labelClass}>Role *</span>
+          <select className={`${inputClass} mt-2`} value={form.role} onChange={set('role')} required>
+            <option value="" disabled>
+              Select your role
+            </option>
+            <option>Consultant</option>
+            <option>IT Manager</option>
+            <option>Project Manager</option>
+            <option>Director</option>
+            <option>Other</option>
+          </select>
+        </label>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <label className="block">
+          <span className={labelClass}>Records estimate *</span>
+          <select className={`${inputClass} mt-2`} value={form.records_estimate} onChange={set('records_estimate')} required>
+            <option value="" disabled>
+              Select an estimate
+            </option>
+            <option>Under 100k</option>
+            <option>100k to 1M</option>
+            <option>1M to 5M</option>
             <option>5M+</option>
+          </select>
+        </label>
+        <label className="block">
+          <span className={labelClass}>Source system *</span>
+          <select className={`${inputClass} mt-2`} value={form.source_system} onChange={set('source_system')} required>
+            <option value="" disabled>
+              Select a source system
+            </option>
+            <option>SQL Server</option>
+            <option>CSV or Excel</option>
+            <option>Salesforce</option>
+            <option>SAP</option>
+            <option>Legacy CRM</option>
+            <option>Other</option>
           </select>
         </label>
       </div>
       <label className="block">
-        <span className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">Message</span>
+        <span className={labelClass}>Message</span>
         <textarea
           rows={5}
           className={`${inputClass} mt-2 resize-y`}
           value={form.message}
           onChange={set('message')}
-          placeholder="Tell us about your migration project…"
+          placeholder="Tell us about your migration project"
         />
       </label>
       <button
         onClick={handleSubmit}
         disabled={status === 'loading'}
-        className="bg-electric text-white font-bold text-[15px] rounded-full px-8 py-4 hover:scale-105 transition-transform duration-150 disabled:opacity-60 disabled:hover:scale-100"
+        className="w-full bg-electric text-white font-bold text-[15px] rounded-full px-8 py-4 hover:scale-[1.02] transition-transform duration-150 disabled:opacity-60 disabled:hover:scale-100"
       >
         {status === 'loading' ? 'Sending...' : 'Send request'}
       </button>

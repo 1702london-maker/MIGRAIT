@@ -46,8 +46,8 @@ export function Waitlist() {
           Join the waitlist and be first to migrate faster than you thought possible.
         </p>
         {status === 'success' ? (
-          <p className="mt-8 text-electric font-bold text-lg">
-            You&apos;re on the list. We&apos;ll be in touch.
+          <p className="mt-8 text-night font-semibold text-lg">
+            You are on the list. We will be in touch.
           </p>
         ) : (
           <>

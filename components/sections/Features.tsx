@@ -39,7 +39,7 @@ const features = [
 export function Features() {
   return (
     <motion.section
-      id="features"
+      id="features-detail"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}

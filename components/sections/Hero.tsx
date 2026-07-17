@@ -68,9 +68,9 @@ export function Hero() {
             </p>
           </div>
           <div>
-            <p className="text-3xl font-black text-night tabular-nums">&lt; {hours} hrs</p>
+            <p className="text-3xl font-black text-night tabular-nums">&lt; {hours}</p>
             <p className="mt-1 text-[11px] font-semibold uppercase tracking-[2px] text-slate">
-              Per migration
+              Hours or less
             </p>
           </div>
           <div>
@@ -78,7 +78,7 @@ export function Hero() {
               {(accuracy / 100).toFixed(2)}%
             </p>
             <p className="mt-1 text-[11px] font-semibold uppercase tracking-[2px] text-slate">
-              Accuracy
+              Accuracy %
             </p>
           </div>
         </motion.div>

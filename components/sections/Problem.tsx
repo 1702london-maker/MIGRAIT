@@ -24,11 +24,12 @@ const pains = [
 export function Problem() {
   return (
     <motion.section
+      id="features"
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: 'easeOut' }}
-      className="bg-white py-24"
+      className="bg-white py-24 scroll-mt-16"
     >
       <div className="mx-auto max-w-[960px] px-5 text-center">
         <p className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">The Problem</p>

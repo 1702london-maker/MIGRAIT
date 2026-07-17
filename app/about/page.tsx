@@ -1,10 +1,28 @@
 import type { Metadata } from 'next'
+import { Zap, Eye, MousePointerClick } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'About — Migrait',
-  description:
-    'Migrait is a Budruum product. Budruum Ltd is a UK-based founder studio building software that solves real problems.',
+  title: 'About',
+  description: 'Migrait is a Budruum Ltd product. Built because the tools we used were terrible.',
 }
+
+const diffs = [
+  {
+    icon: Zap,
+    title: 'Speed',
+    body: 'Parallel batch processing at Dataverse API maximum throughput. 5 million records under 2 hours.',
+  },
+  {
+    icon: Eye,
+    title: 'Visibility',
+    body: 'Real-time dashboard. Every record. Every error. Every second. Visible to you and your client.',
+  },
+  {
+    icon: MousePointerClick,
+    title: 'Simplicity',
+    body: 'Browser-based. No SQL Server. No SSIS. No Azure architect required. Connect and migrate.',
+  },
+]
 
 export default function AboutPage() {
   return (
@@ -14,40 +32,57 @@ export default function AboutPage() {
         <h1 className="mt-6 font-black text-night text-[40px] md:text-[56px] leading-[1.08] tracking-[-2px]">
           We built Migrait because the tools we used were terrible.
         </h1>
-        <p className="mt-6 mx-auto max-w-[560px] text-lg text-slate leading-relaxed">
-          Migrait is a Budruum product. Budruum Ltd is a UK-based founder studio building software
-          that solves real problems for businesses that can&apos;t afford to waste time.
+        <p className="mt-6 mx-auto max-w-[620px] text-lg text-slate leading-relaxed">
+          Migrait is a product of Budruum Ltd — a UK-based founder studio that builds software
+          solving real problems for businesses that cannot afford to waste time. We spent years
+          watching data migration projects overrun, fail, and damage client relationships because
+          the tools available were either too complex, too slow, or completely invisible to the
+          client. So we built the tool we always wanted.
         </p>
       </section>
 
-      <section className="mx-auto max-w-3xl px-5 pb-24">
-        <p className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">The Story</p>
-        <h2 className="mt-4 font-bold text-night text-[30px] tracking-[-1px]">
-          Why Migrait exists
+      <section className="mx-auto max-w-3xl px-5 pb-20 text-center">
+        <h2 className="font-bold text-night text-[30px] md:text-[42px] tracking-[-1px]">
+          Our mission
         </h2>
-        <div className="mt-6 space-y-5 text-night leading-[1.7]">
-          <p>
-            Every data migration project starts the same way: a consultancy wins the work, and then
-            the tooling fight begins. KingswaySoft demands a SQL Server install and SSIS expertise.
-            Azure Data Factory needs an Azure architect before a single record moves. And once the
-            job finally starts, everyone — consultant and client alike — sits in the dark waiting
-            for a black box to finish.
-          </p>
-          <p>
-            We lived that gap on real Dynamics 365 implementations. Slow setup, zero visibility, no
-            way to show a client what was happening with their own data. So we built the tool we
-            wished existed: browser-based, AI-assisted mapping, full pre-migration validation, and a
-            live dashboard you can hand straight to the client. 5 million records. Under 2 hours.
-          </p>
+        <p className="mt-5 text-night text-lg leading-[1.7]">
+          To make data migration fast, visible, and accessible to every consultancy in the world —
+          not just the ones with a dedicated engineering team.
+        </p>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-5 pb-20 text-center">
+        <h2 className="font-bold text-night text-[30px] md:text-[42px] tracking-[-1px]">
+          What Migrait does differently
+        </h2>
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+          {diffs.map((d) => (
+            <div
+              key={d.title}
+              className="border border-line bg-white rounded-xl p-8 hover:-translate-y-1 transition-transform duration-200"
+            >
+              <d.icon className="text-electric" size={28} />
+              <h3 className="mt-5 font-semibold text-night text-[22px]">{d.title}</h3>
+              <p className="mt-3 text-slate leading-relaxed">{d.body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      <section className="mx-auto max-w-3xl px-5 pb-28">
-        <p className="text-[11px] font-semibold uppercase tracking-[2px] text-slate">The Team</p>
-        <h2 className="mt-4 font-bold text-night text-[30px] tracking-[-1px]">Built by Budruum Ltd</h2>
+      <section className="mx-auto max-w-3xl px-5 pb-28 text-center">
+        <h2 className="font-bold text-night text-[30px] md:text-[42px] tracking-[-1px]">
+          Built by Budruum Ltd
+        </h2>
         <p className="mt-5 text-night leading-[1.7]">
-          Migrait is designed, engineered, and supported by Budruum Ltd in the United Kingdom.{' '}
-          <a href="https://budruum.co.uk" className="text-electric font-semibold">
+          Budruum Ltd is a UK founder studio building SaaS products across data, care technology,
+          EdTech, and enterprise software. Migrait is one of several products in the Budruum
+          portfolio.{' '}
+          <a
+            href="https://budruum.co.uk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-electric font-semibold"
+          >
             budruum.co.uk
           </a>
         </p>
