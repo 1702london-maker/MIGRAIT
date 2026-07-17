@@ -88,7 +88,7 @@ export function StatsBanner() {
               i % 2 === 0 ? 'border-r border-line lg:border-r' : ''
             }`}
           >
-            <p className="font-black text-night text-4xl md:text-[56px] leading-none">
+            <p className="font-black text-night text-3xl sm:text-4xl md:text-[48px] leading-none break-all sm:break-normal">
               <CountUp
                 target={s.target}
                 prefix={s.prefix}
