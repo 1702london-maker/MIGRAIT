@@ -1,5 +1,5 @@
 import { Resend } from 'resend'
-const FROM = 'Migrait <hello@migrait.app>'
+const FROM = 'Migrait <onboarding@resend.dev>'
 function getResend() { return new Resend(process.env.RESEND_API_KEY) }
 
 export async function sendWelcomeEmail(email: string, name: string) {
