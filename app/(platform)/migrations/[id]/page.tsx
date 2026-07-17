@@ -10,7 +10,8 @@ import { Modal } from '@/components/ui/Modal'
 import { MigrationProgressChart } from '@/components/charts/MigrationProgressChart'
 import { motion } from 'framer-motion'
 import { format } from 'date-fns'
-import { Copy, Check } from 'lucide-react'
+import { Copy, Check, Download } from 'lucide-react'
+import { ExportButton } from '@/components/ExportButton'
 
 interface ChartPoint { time: string; records: number }
 
@@ -85,6 +86,46 @@ export default function MigrationDetailPage() {
           </p>
         </div>
         <div className="flex items-center gap-2">
+          <ExportButton
+            data={logs}
+            filename={`migration-logs-${id?.slice(0, 8)}`}
+            label="Export Logs"
+          />
+          <Button size="sm" variant="ghost" onClick={() => {
+            const duration = migration.started_at && migration.completed_at
+              ? Math.round((new Date(migration.completed_at).getTime() - new Date(migration.started_at).getTime()) / 1000)
+              : null
+            const successRate = migration.total_records > 0
+              ? ((migration.successful_records / migration.total_records) * 100).toFixed(2)
+              : '0'
+            const html = `<!DOCTYPE html><html><head><title>Migration Report — ${migration.projects?.name}</title><style>body{font-family:Inter,sans-serif;max-width:800px;margin:40px auto;padding:0 20px;color:#0A0E1A}h1{font-size:28px;font-weight:900;margin-bottom:4px}h2{font-size:16px;font-weight:700;margin:28px 0 12px;border-bottom:1px solid #E8ECF0;padding-bottom:8px}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px 12px;font-size:13px;border-bottom:1px solid #E8ECF0}th{background:#F8FAFC;font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.05em;color:#6B7A8D}.badge{display:inline-block;padding:2px 10px;border-radius:100px;font-size:12px;font-weight:600;background:${migration.status==='completed'?'#DCFCE7':migration.status==='failed'?'#FEE2E2':'#F0F4FF'};color:${migration.status==='completed'?'#166534':migration.status==='failed'?'#991B1B':'#3730A3'}}.stat{display:inline-block;min-width:160px;padding:16px;border:1px solid #E8ECF0;border-radius:12px;margin:0 8px 8px 0}.stat-val{font-size:28px;font-weight:900}.stat-label{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:#6B7A8D;margin-top:4px}@media print{body{margin:20px}}</style></head><body>
+<h1>Migration Report</h1><p style="color:#6B7A8D;margin-bottom:24px">Generated ${new Date().toLocaleString('en-GB')}</p>
+<h2>Summary</h2>
+<table><tr><th>Field</th><th>Value</th></tr>
+<tr><td>Migration ID</td><td style="font-family:monospace">${id}</td></tr>
+<tr><td>Project</td><td>${migration.projects?.name || '—'}</td></tr>
+<tr><td>Status</td><td><span class="badge">${migration.status}</span></td></tr>
+<tr><td>Started</td><td>${migration.started_at ? new Date(migration.started_at).toLocaleString('en-GB') : '—'}</td></tr>
+<tr><td>Completed</td><td>${migration.completed_at ? new Date(migration.completed_at).toLocaleString('en-GB') : '—'}</td></tr>
+${duration ? `<tr><td>Duration</td><td>${Math.floor(duration/60)}m ${duration%60}s</td></tr>` : ''}
+</table>
+<h2>Records</h2>
+<div>
+<div class="stat"><div class="stat-val">${(migration.total_records||0).toLocaleString()}</div><div class="stat-label">Total</div></div>
+<div class="stat"><div class="stat-val" style="color:#166534">${(migration.successful_records||0).toLocaleString()}</div><div class="stat-label">Successful</div></div>
+<div class="stat"><div class="stat-val" style="color:#E11D48">${(migration.failed_records||0).toLocaleString()}</div><div class="stat-label">Failed</div></div>
+<div class="stat"><div class="stat-val">${successRate}%</div><div class="stat-label">Success Rate</div></div>
+</div>
+<h2>Recent Errors</h2>
+${logs.filter(l=>l.status!=='success').length===0?'<p style="color:#6B7A8D;font-size:14px">No errors recorded.</p>':`<table><tr><th>Record ID</th><th>Entity</th><th>Error</th></tr>${logs.filter(l=>l.status!=='success').slice(0,10).map(l=>`<tr><td style="font-family:monospace">${l.record_id}</td><td>${l.entity_type}</td><td>${l.error_message||'—'}</td></tr>`).join('')}</table>`}
+<p style="color:#6B7A8D;font-size:12px;margin-top:40px;border-top:1px solid #E8ECF0;padding-top:16px">Migrait — Migration, Accelerated · migrait.app</p>
+</body></html>`
+            const w = window.open('', '_blank')
+            if (w) { w.document.write(html); w.document.close(); setTimeout(() => w.print(), 500) }
+          }}>
+            <Download size={14} className="mr-1 inline" />
+            Download Report
+          </Button>
           <Button size="sm" variant="ghost" onClick={copyShare}>
             {copied ? <Check size={14} className="mr-1 inline text-green-600" /> : <Copy size={14} className="mr-1 inline" />}
             {copied ? 'Copied!' : 'Share'}

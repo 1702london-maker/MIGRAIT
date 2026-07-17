@@ -6,7 +6,7 @@ import { statusBadge } from '@/components/ui/Badge'
 import { Button } from '@/components/ui/Button'
 import { SlideOver } from '@/components/ui/SlideOver'
 import { format } from 'date-fns'
-import { Download } from 'lucide-react'
+import { ExportButton } from '@/components/ExportButton'
 
 export default function QuarantinePage() {
   const [records, setRecords] = useState<any[]>([])
@@ -38,13 +38,6 @@ export default function QuarantinePage() {
     load()
   }
 
-  const exportCsv = () => {
-    const rows = [['ID', 'Entity', 'Error', 'Status', 'Created']]
-    filtered.forEach(r => rows.push([r.id, r.entity_type, r.error_reason, r.status, r.created_at]))
-    const csv = rows.map(r => r.join(',')).join('\n')
-    const a = document.createElement('a'); a.href = `data:text/csv,${encodeURIComponent(csv)}`; a.download = 'quarantine.csv'; a.click()
-  }
-
   const filtered = filter === 'all' ? records : records.filter(r => r.status === filter)
 
   return (
@@ -53,7 +46,18 @@ export default function QuarantinePage() {
         <h1 className="text-2xl font-bold text-[#0A0E1A]">Quarantine</h1>
         <div className="flex items-center gap-2">
           {selected.length > 0 && <Button size="sm" variant="outline" onClick={bulkIgnore}>Ignore {selected.length} selected</Button>}
-          <Button size="sm" variant="ghost" onClick={exportCsv}><Download size={14} className="mr-1 inline" />Export CSV</Button>
+          <ExportButton
+            data={filtered.map(r => ({
+              id: r.id,
+              entity_type: r.entity_type,
+              record_id: r.record_id,
+              error_reason: r.error_reason,
+              status: r.status,
+              created_at: r.created_at,
+              ...Object.fromEntries(Object.entries(r.source_data || {}).map(([k, v]) => [`source_${k}`, v]))
+            }))}
+            filename="quarantine-records"
+          />
           <select value={filter} onChange={e => setFilter(e.target.value)} className="border border-[#E8ECF0] rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-[#E11D48]">
             <option value="all">All</option>
             <option value="pending">Pending</option>
