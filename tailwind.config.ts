@@ -6,7 +6,7 @@ const config: Config = {
     extend: {
       colors: {
         night: "#0A0E1A",
-        electric: "#00D4FF",
+        electric: "#E11D48",
         slate: "#6B7A8D",
         line: "#E8ECF0",
       },
