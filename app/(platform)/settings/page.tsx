@@ -87,6 +87,25 @@ export default function SettingsPage() {
               <div className="bg-white border border-[#E8ECF0] rounded-xl p-6 space-y-4">
                 <Input label="Organisation name" value={org.name || ''} onChange={e => setOrg((o: any) => ({ ...o, name: e.target.value }))} />
                 <div>
+                  <label className="block text-sm font-medium text-[#0A0E1A] mb-1">Logo</label>
+                  {org.logo_url && <img src={org.logo_url} alt="Logo" className="h-12 object-contain mb-2 rounded" />}
+                  <input type="file" accept="image/*" onChange={async (e) => {
+                    const file = e.target.files?.[0]
+                    if (!file) return
+                    const ext = file.name.split('.').pop()
+                    const path = `${orgId}/logo.${ext}`
+                    const { error: upErr } = await supabase.storage.from('logos').upload(path, file, { upsert: true })
+                    if (!upErr) {
+                      const { data: urlData } = supabase.storage.from('logos').getPublicUrl(path)
+                      const logoUrl = urlData.publicUrl
+                      await supabase.from('organisations').update({ logo_url: logoUrl }).eq('id', orgId)
+                      setOrg((o: any) => ({ ...o, logo_url: logoUrl }))
+                      setMsg('Logo uploaded.')
+                      setTimeout(() => setMsg(''), 3000)
+                    }
+                  }} className="text-sm text-[#6B7A8D]" />
+                </div>
+                <div>
                   <label className="block text-sm font-medium text-[#0A0E1A] mb-1">Plan</label>
                   <p className="text-sm text-[#6B7A8D] capitalize">{org.plan}</p>
                 </div>

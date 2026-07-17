@@ -2,9 +2,19 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/', '/about', '/pricing', '/contact', '/login', '/register', '/reset-password']
+const PUBLIC_PATHS = ['/', '/about', '/pricing', '/contact', '/login', '/register', '/reset-password', '/privacy', '/terms', '/cookies']
 
 export async function middleware(req: NextRequest) {
+  const pathname = req.nextUrl.pathname
+
+  // Admin route protection — check httpOnly cookie before Supabase
+  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login') && !pathname.startsWith('/api/admin/auth')) {
+    const adminCookie = req.cookies.get('migrait_admin')?.value
+    if (adminCookie !== 'true') {
+      return NextResponse.redirect(new URL('/admin/login', req.url))
+    }
+  }
+
   let response = NextResponse.next({ request: { headers: req.headers } })
 
   const supabase = createServerClient(
@@ -28,7 +38,6 @@ export async function middleware(req: NextRequest) {
   )
 
   const { data: { session } } = await supabase.auth.getSession()
-  const pathname = req.nextUrl.pathname
 
   const isPublic =
     PUBLIC_PATHS.some(p => pathname === p) ||

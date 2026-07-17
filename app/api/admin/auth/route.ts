@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
   const res = NextResponse.json({ ok: true })
-  res.cookies.set('migrait_admin', 'true', { httpOnly: true, sameSite: 'strict', maxAge: 60 * 60 * 8 })
+  res.cookies.set('migrait_admin', 'true', { httpOnly: true, sameSite: 'strict' as const, maxAge: 60 * 60 * 8 })
   return res
 }
 

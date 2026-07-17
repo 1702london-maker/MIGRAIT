@@ -5,7 +5,8 @@ import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { statusBadge } from '@/components/ui/Badge'
 import { MigrationsPerDayChart } from '@/components/charts/MigrationsPerDayChart'
-import { format, subDays } from 'date-fns'
+import { format, subDays, formatDistanceToNow } from 'date-fns'
+import { FolderPlus, Plug, AlertTriangle, Activity } from 'lucide-react'
 
 interface KPI { totalMigrations: number; recordsMigrated: number; activeMigrations: number; successRate: number }
 
@@ -23,6 +24,7 @@ export default function DashboardPage() {
   const [kpi, setKpi] = useState<KPI>({ totalMigrations: 0, recordsMigrated: 0, activeMigrations: 0, successRate: 0 })
   const [recentMigrations, setRecentMigrations] = useState<any[]>([])
   const [recentProjects, setRecentProjects] = useState<any[]>([])
+  const [activityLogs, setActivityLogs] = useState<any[]>([])
   const [chartData, setChartData] = useState<{ date: string; count: number }[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -33,9 +35,10 @@ export default function DashboardPage() {
       if (!p?.organisation_id) { setLoading(false); return }
       const oid = p.organisation_id
 
-      const [migRes, projRes] = await Promise.all([
+      const [migRes, projRes, actRes] = await Promise.all([
         supabase.from('migrations').select('*, projects(name)').eq('organisation_id', oid).order('created_at', { ascending: false }),
         supabase.from('projects').select('*').eq('organisation_id', oid).order('created_at', { ascending: false }).limit(5),
+        supabase.from('activity_logs').select('*, profiles(full_name)').eq('organisation_id', oid).order('created_at', { ascending: false }).limit(10),
       ])
 
       const migs = migRes.data || []
@@ -50,6 +53,7 @@ export default function DashboardPage() {
       setKpi({ totalMigrations, recordsMigrated, activeMigrations, successRate })
       setRecentMigrations(migs.slice(0, 5))
       setRecentProjects(projRes.data || [])
+      setActivityLogs(actRes.data || [])
 
       const last30 = Array.from({ length: 30 }, (_, i) => {
         const d = subDays(new Date(), 29 - i)
@@ -131,9 +135,47 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Quick Actions */}
       <div className="bg-white border border-[#E8ECF0] rounded-xl p-6">
-        <h2 className="text-base font-semibold text-[#0A0E1A] mb-4">Migrations — last 30 days</h2>
-        <MigrationsPerDayChart data={chartData} />
+        <h2 className="text-base font-semibold text-[#0A0E1A] mb-4">Quick Actions</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          {[
+            { label: 'New Project', href: '/app/projects/new', icon: FolderPlus },
+            { label: 'Add Connection', href: '/app/connections/new', icon: Plug },
+            { label: 'View Quarantine', href: '/app/quarantine', icon: AlertTriangle },
+            { label: 'Activity Log', href: '/app/activity', icon: Activity },
+          ].map(({ label, href, icon: Icon }) => (
+            <Link key={href} href={href} className="flex flex-col items-center gap-2 p-4 rounded-xl border border-[#E8ECF0] hover:border-[#E11D48] hover:bg-red-50 transition-colors text-center">
+              <Icon size={20} className="text-[#E11D48]" />
+              <span className="text-xs font-medium text-[#0A0E1A]">{label}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white border border-[#E8ECF0] rounded-xl p-6">
+          <h2 className="text-base font-semibold text-[#0A0E1A] mb-4">Migrations — last 30 days</h2>
+          <MigrationsPerDayChart data={chartData} />
+        </div>
+        <div className="bg-white border border-[#E8ECF0] rounded-xl p-6">
+          <h2 className="text-base font-semibold text-[#0A0E1A] mb-4">Recent Activity</h2>
+          {activityLogs.length === 0 ? (
+            <p className="text-sm text-[#6B7A8D]">No activity yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {activityLogs.map(log => (
+                <div key={log.id} className="flex items-start gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#E11D48] mt-2 flex-shrink-0" />
+                  <div>
+                    <p className="text-sm text-[#0A0E1A]">{log.action.replace(/_/g, ' ')}</p>
+                    <p className="text-xs text-[#6B7A8D]">{log.profiles?.full_name || 'System'} · {formatDistanceToNow(new Date(log.created_at), { addSuffix: true })}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   )

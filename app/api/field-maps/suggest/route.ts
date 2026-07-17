@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { suggestFieldMappings } from '@/lib/openai'
 
 function similarity(a: string, b: string): number {
   const na = a.toLowerCase().replace(/[_\s-]/g, '')
@@ -19,7 +20,17 @@ function similarity(a: string, b: string): number {
 }
 
 export async function POST(req: NextRequest) {
-  const { source_fields, destination_fields } = await req.json()
+  const { source_fields, destination_fields, source_entity, destination_entity } = await req.json()
+
+  // Try OpenAI first
+  if (process.env.OPENAI_API_KEY && !process.env.OPENAI_API_KEY.startsWith('sk-placeholder')) {
+    try {
+      const aiSuggestions = await suggestFieldMappings(source_fields, destination_fields, source_entity || 'source', destination_entity || 'destination')
+      return NextResponse.json({ suggestions: aiSuggestions })
+    } catch {
+      // fall through to local algorithm
+    }
+  }
 
   const suggestions: { source_field: string; destination_field: string; confidence: number }[] = []
   const usedDest = new Set<string>()

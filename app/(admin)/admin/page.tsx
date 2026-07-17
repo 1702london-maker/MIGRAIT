@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 import { Tabs } from '@/components/ui/Tabs'
 import { MigrationsPerDayChart } from '@/components/charts/MigrationsPerDayChart'
 import { format, subDays } from 'date-fns'
@@ -20,26 +19,33 @@ export default function AdminPage() {
     })
 
     const load = async () => {
+      const fetchTable = async (table: string) => {
+        const res = await fetch(`/api/admin/data?table=${table}`)
+        if (!res.ok) return []
+        const json = await res.json()
+        return json.data || []
+      }
+
       const [orgs, profiles, migs, waitlist, demos] = await Promise.all([
-        supabase.from('organisations').select('*, profiles(count)'),
-        supabase.from('profiles').select('*, organisations(name)').order('created_at', { ascending: false }),
-        supabase.from('migrations').select('*, projects(name, organisations(name))').order('created_at', { ascending: false }),
-        supabase.from('waitlist').select('*').order('created_at', { ascending: false }),
-        supabase.from('demo_requests').select('*').order('created_at', { ascending: false }),
+        fetchTable('organisations'),
+        fetchTable('profiles'),
+        fetchTable('migrations'),
+        fetchTable('waitlist'),
+        fetchTable('demo_requests'),
       ])
 
       setData({
-        orgs: orgs.data || [],
-        users: profiles.data || [],
-        migrations: migs.data || [],
-        waitlist: waitlist.data || [],
-        demos: demos.data || [],
+        orgs,
+        users: profiles,
+        migrations: migs,
+        waitlist,
+        demos,
       })
 
       const last30 = Array.from({ length: 30 }, (_, i) => {
         const d = subDays(new Date(), 29 - i)
         const dateStr = format(d, 'MMM d')
-        const count = (profiles.data || []).filter(p => format(new Date(p.created_at), 'MMM d') === dateStr).length
+        const count = profiles.filter((p: any) => format(new Date(p.created_at), 'MMM d') === dateStr).length
         return { date: dateStr, count }
       })
       setChartData(last30)
