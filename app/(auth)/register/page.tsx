@@ -1,16 +1,30 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { supabase } from '@/lib/supabase'
 import { MigraitLogo } from '@/components/MigraitLogo'
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const inviteToken = searchParams.get('invite')
   const [form, setForm] = useState({ fullName: '', email: '', password: '', confirmPassword: '', orgName: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [inviteData, setInviteData] = useState<any>(null)
+
+  useEffect(() => {
+    if (!inviteToken) return
+    supabase.from('team_invites').select('*, organisations(name)').eq('token', inviteToken).eq('status', 'pending').single()
+      .then(({ data }) => {
+        if (data) {
+          setInviteData(data)
+          setForm(f => ({ ...f, email: data.email, orgName: '' }))
+        }
+      })
+  }, [inviteToken])
 
   const set = (k: string) => (e: React.ChangeEvent<HTMLInputElement>) => setForm(f => ({ ...f, [k]: e.target.value }))
 
@@ -19,7 +33,7 @@ export default function RegisterPage() {
     setError('')
     if (form.password !== form.confirmPassword) { setError('Passwords do not match.'); return }
     if (form.password.length < 8) { setError('Password must be at least 8 characters.'); return }
-    if (!form.orgName.trim()) { setError('Organisation name is required.'); return }
+    if (!inviteToken && !form.orgName.trim()) { setError('Organisation name is required.'); return }
     setLoading(true)
 
     const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
@@ -29,18 +43,21 @@ export default function RegisterPage() {
     })
     if (signUpErr || !signUpData.user) { setError(signUpErr?.message || 'Signup failed.'); setLoading(false); return }
 
-    const slug = form.orgName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now()
-    const { data: orgData, error: orgErr } = await supabase
-      .from('organisations')
-      .insert({ name: form.orgName, slug })
-      .select()
-      .single()
-    if (orgErr || !orgData) { setError('Could not create organisation.'); setLoading(false); return }
+    if (inviteToken && inviteData) {
+      await supabase.from('profiles').update({ organisation_id: inviteData.organisation_id, full_name: form.fullName, role: inviteData.role }).eq('id', signUpData.user.id)
+      await supabase.from('team_invites').update({ status: 'accepted' }).eq('token', inviteToken)
+    } else {
+      const slug = form.orgName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Date.now()
+      const { data: orgData, error: orgErr } = await supabase.from('organisations').insert({ name: form.orgName, slug }).select().single()
+      if (orgErr || !orgData) { setError('Could not create organisation.'); setLoading(false); return }
+      await supabase.from('profiles').update({ organisation_id: orgData.id, full_name: form.fullName, role: 'owner' }).eq('id', signUpData.user.id)
+    }
 
-    await supabase
-      .from('profiles')
-      .update({ organisation_id: orgData.id, full_name: form.fullName, role: 'owner' })
-      .eq('id', signUpData.user.id)
+    await fetch('/api/auth/welcome', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.email, name: form.fullName }),
+    })
 
     router.push('/app/dashboard')
   }
@@ -48,7 +65,7 @@ export default function RegisterPage() {
   const fields = [
     { key: 'fullName', label: 'Full name', type: 'text', placeholder: 'Jane Smith' },
     { key: 'email', label: 'Email', type: 'email', placeholder: 'you@company.com' },
-    { key: 'orgName', label: 'Organisation name', type: 'text', placeholder: 'Acme Consulting Ltd' },
+    ...(!inviteToken ? [{ key: 'orgName', label: 'Organisation name', type: 'text', placeholder: 'Acme Consulting Ltd' }] : []),
     { key: 'password', label: 'Password', type: 'password', placeholder: '••••••••' },
     { key: 'confirmPassword', label: 'Confirm password', type: 'password', placeholder: '••••••••' },
   ]
@@ -57,6 +74,11 @@ export default function RegisterPage() {
     <div className="w-full max-w-md">
       <div className="text-center mb-8"><MigraitLogo /></div>
       <div className="border border-[#E8ECF0] rounded-2xl p-8">
+        {inviteData && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+            You've been invited to join <strong>{(inviteData.organisations as any)?.name}</strong> as <strong>{inviteData.role}</strong>.
+          </div>
+        )}
         <h1 className="text-2xl font-bold text-[#0A0E1A] mb-6">Create your account</h1>
         <form onSubmit={handleRegister} className="space-y-4">
           {fields.map(f => (

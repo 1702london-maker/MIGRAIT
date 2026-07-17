@@ -38,7 +38,15 @@ export default function TeamPage() {
 
   const sendInvite = async () => {
     const token = crypto.randomUUID()
-    await supabase.from('team_invites').insert({ organisation_id: orgId, email: inviteEmail, role: inviteRole, token })
+    await supabase.from('team_invites').insert({ organisation_id: orgId, email: inviteEmail, role: inviteRole, token, status: 'pending' })
+    // Send invite email via API
+    const { data: { user } } = await supabase.auth.getUser()
+    const { data: p } = await supabase.from('profiles').select('full_name, organisations(name)').eq('id', user!.id).single()
+    await fetch('/api/team/invite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: inviteEmail, inviterName: (p as any)?.full_name, orgName: (p as any)?.organisations?.name, role: inviteRole, token })
+    })
     setInviteModal(false); setInviteEmail(''); setInviteRole('member'); load()
   }
 
